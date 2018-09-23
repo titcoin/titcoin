@@ -1,13 +1,13 @@
 dist_man1_MANS=
 
-if BUILD_BITCOIND
-  dist_man1_MANS+=bitcoind.1
+if BUILD_TITCOIND
+  dist_man1_MANS+=titcoind.1
 endif
 
 if ENABLE_QT
-  dist_man1_MANS+=bitcoin-qt.1
+  dist_man1_MANS+=titcoin-qt.1
 endif
 
-if BUILD_BITCOIN_UTILS
-  dist_man1_MANS+=bitcoin-cli.1 bitcoin-tx.1
+if BUILD_TITCOIN_UTILS
+  dist_man1_MANS+=titcoin-cli.1 titcoin-tx.1
 endif

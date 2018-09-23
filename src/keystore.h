@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_KEYSTORE_H
-#define BITCOIN_KEYSTORE_H
+#ifndef TITCOIN_KEYSTORE_H
+#define TITCOIN_KEYSTORE_H
 
 #include <key.h>
 #include <pubkey.h>
@@ -85,4 +85,4 @@ typedef std::map<CKeyID, std::pair<CPubKey, std::vector<unsigned char> > > Crypt
 /** Return the CKeyID of the key involved in a script (if there is a unique one). */
 CKeyID GetKeyForDestination(const CKeyStore& store, const CTxDestination& dest);
 
-#endif // BITCOIN_KEYSTORE_H
+#endif // TITCOIN_KEYSTORE_H
