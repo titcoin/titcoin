@@ -1,0 +1,33 @@
+# /etc/conf.d/titcoind: config file for /etc/init.d/titcoind
+
+# Config file location
+#TITCOIND_CONFIGFILE="/etc/titcoin/titcoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $TITCOIND_USER)
+#TITCOIND_PIDDIR="/var/run/titcoind"
+
+# What filename to give the pidfile
+#TITCOIND_PIDFILE="${TITCOIND_PIDDIR}/titcoind.pid"
+
+# Where to write titcoind data (be mindful that the blockchain is large)
+#TITCOIND_DATADIR="/var/lib/titcoind"
+
+# User and group to own titcoind process
+#TITCOIND_USER="titcoin"
+#TITCOIND_GROUP="titcoin"
+
+# Path to titcoind executable
+#TITCOIND_BIN="/usr/bin/titcoind"
+
+# Nice value to run titcoind under
+#TITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#TITCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for titcoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+TITCOIND_SIGTERM_TIMEOUT=60

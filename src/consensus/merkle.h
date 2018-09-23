@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_MERKLE
-#define BITCOIN_MERKLE
+#ifndef TITCOIN_MERKLE
+#define TITCOIN_MERKLE
 
 #include <stdint.h>
 #include <vector>

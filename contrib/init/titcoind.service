@@ -1,0 +1,25 @@
+# It is not recommended to modify this file in-place, because it will
+# be overwritten during package upgrades. If you want to add further
+# options or overwrite existing ones then use
+# $ systemctl edit titcoind.service
+# See "man systemd.service" for details.
+
+# Note that almost all daemon options could be specified in
+# /etc/titcoin/titcoin.conf
+
+[Unit]
+Description=Titcoin daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/titcoind -daemon -conf=/etc/titcoin/titcoin.conf -pid=/run/titcoind/titcoind.pid
+# Creates /run/titcoind owned by titcoin
+RuntimeDirectory=titcoind
+User=titcoin
+Type=forking
+PIDFile=/run/titcoind/titcoind.pid
+Restart=on-failure
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
