@@ -83,7 +83,7 @@ class MultiWalletTest(TitcoinTestFramework):
         assert_equal(set(node.listwallets()), {"w4", "w5"})
         w5 = wallet("w5")
         w5_info = w5.getwalletinfo()
-        assert_equal(w5_info['immature_balance'], 50)
+        assert_equal(w5_info['immature_balance'], 69)
 
         competing_wallet_dir = os.path.join(self.options.tmpdir, 'competing_walletdir')
         os.mkdir(competing_wallet_dir)
@@ -108,7 +108,7 @@ class MultiWalletTest(TitcoinTestFramework):
 
         # check w1 wallet balance
         w1_info = w1.getwalletinfo()
-        assert_equal(w1_info['immature_balance'], 50)
+        assert_equal(w1_info['immature_balance'], 69)
         w1_name = w1_info['walletname']
         assert_equal(w1_name, "w1")
 
@@ -125,7 +125,7 @@ class MultiWalletTest(TitcoinTestFramework):
         assert_equal(w4_name, "w")
 
         w1.generate(101)
-        assert_equal(w1.getbalance(), 100)
+        assert_equal(w1.getbalance(), 138)
         assert_equal(w2.getbalance(), 0)
         assert_equal(w3.getbalance(), 0)
         assert_equal(w4.getbalance(), 0)
