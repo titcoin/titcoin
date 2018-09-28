@@ -77,7 +77,7 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 500000; // TIT block reward is halving roughly every 347 days
         consensus.BIP16Height = 173805; // 00000000000000ce80a7e057163a4db1d5ad7b20fb6f598c9597b9665c8fb0d4 - April 1, 2012
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
@@ -228,7 +228,7 @@ public:
         nDefaultPort = 18698;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, 69 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         // We don't have an official testnet so we don't care what the actual blocks here are;
         // Just trying to keep changes to the codebase minimal.
@@ -313,7 +313,7 @@ public:
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 69 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x1ee5aff065c73010c97c661c59f5b4cd9da5fc748ef1608878f414bb7c4d1a93"));
         assert(genesis.hashMerkleRoot == uint256S("0x1f9a164dac7677bcb240ff49665acd611e7bd58ff1de4aefe8581ab60f1042fe"));

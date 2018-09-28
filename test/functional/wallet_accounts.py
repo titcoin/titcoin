@@ -28,13 +28,13 @@ class WalletAccountsTest(TitcoinTestFramework):
         assert_equal(len(node.listunspent()), 0)
 
         # Note each time we call generate, all generated coins go into
-        # the same address, so we call twice to get two addresses w/50 each
+        # the same address, so we call twice to get two addresses w/69 each
         node.generate(1)
         node.generate(101)
-        assert_equal(node.getbalance(), 100)
+        assert_equal(node.getbalance(), 138)
 
         # there should be 2 address groups
-        # each with 1 address with a balance of 50 Titcoins
+        # each with 1 address with a balance of 69 Titcoins
         address_groups = node.listaddressgroupings()
         assert_equal(len(address_groups), 2)
         # the addresses aren't linked now, but will be after we send to the
@@ -43,16 +43,16 @@ class WalletAccountsTest(TitcoinTestFramework):
         for address_group in address_groups:
             assert_equal(len(address_group), 1)
             assert_equal(len(address_group[0]), 2)
-            assert_equal(address_group[0][1], 50)
+            assert_equal(address_group[0][1], 69)
             linked_addresses.add(address_group[0][0])
 
-        # send 50 from each address to a third address not in this wallet
+        # send 69 from each address to a third address not in this wallet
         # There's some fee that will come back to us when the miner reward
         # matures.
         common_address = "msf4WtN1YQKXvNtvdFYt9JBnUD2FB41kjr"
         txid = node.sendmany(
             fromaccount="",
-            amounts={common_address: 100},
+            amounts={common_address: 138},
             subtractfeefrom=[common_address],
             minconf=1,
         )
@@ -94,7 +94,7 @@ class WalletAccountsTest(TitcoinTestFramework):
             assert_equal(
                 node.getreceivedbyaddress(account.addresses[0]), amount_to_send)
             assert_equal(node.getreceivedbyaccount(account.name), amount_to_send)
-        
+
         # Check that sendfrom account reduces listaccounts balances.
         for i, account in enumerate(accounts):
             to_account = accounts[(i+1) % len(accounts)]
@@ -107,12 +107,12 @@ class WalletAccountsTest(TitcoinTestFramework):
             node.move(account.name, "", node.getbalance(account.name))
             account.verify(node)
         node.generate(101)
-        expected_account_balances = {"": 5200}
+        expected_account_balances = {"": 7176}
         for account in accounts:
             expected_account_balances[account.name] = 0
         assert_equal(node.listaccounts(), expected_account_balances)
-        assert_equal(node.getbalance(""), 5200)
-        
+        assert_equal(node.getbalance(""), 7176)
+
         # Check that setaccount can assign an account to a new unused address.
         for account in accounts:
             address = node.getaccountaddress("")
@@ -129,10 +129,10 @@ class WalletAccountsTest(TitcoinTestFramework):
             multisig_address = node.addmultisigaddress(5, addresses, account.name)['address']
             account.add_address(multisig_address)
             account.verify(node)
-            node.sendfrom("", multisig_address, 50)
+            node.sendfrom("", multisig_address, 69)
         node.generate(101)
         for account in accounts:
-            assert_equal(node.getbalance(account.name), 50)
+            assert_equal(node.getbalance(account.name), 69)
 
         # Check that setaccount can change the account of an address from a
         # different account.
