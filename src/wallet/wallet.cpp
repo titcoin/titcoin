@@ -4172,10 +4172,12 @@ OutputType ParseOutputType(const std::string& type, OutputType default_type)
         return default_type;
     } else if (type == OUTPUT_TYPE_STRING_LEGACY) {
         return OUTPUT_TYPE_LEGACY;
+    /*
     } else if (type == OUTPUT_TYPE_STRING_P2SH_SEGWIT) {
         return OUTPUT_TYPE_P2SH_SEGWIT;
     } else if (type == OUTPUT_TYPE_STRING_BECH32) {
         return OUTPUT_TYPE_BECH32;
+    */
     } else {
         return OUTPUT_TYPE_NONE;
     }
