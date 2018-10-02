@@ -98,6 +98,7 @@ void ReceiveCoinsDialog::setModel(WalletModel *_model)
             ui->useBech32->setCheckState(Qt::Checked);
         } else {
             ui->useBech32->setCheckState(Qt::Unchecked);
+            ui->useBech32->setEnabled(false); // Titcoin does not support SegWit / Bech32 yet
         }
     }
 }
