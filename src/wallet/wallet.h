@@ -44,10 +44,14 @@ extern bool fWalletRbf;
 static const unsigned int DEFAULT_KEYPOOL_SIZE = 1000;
 //! -paytxfee default
 static const CAmount DEFAULT_TRANSACTION_FEE = 0;
+
+// If there is no estimate in our case it usually means that there are not enough transactions to even calculate an estimate.
+// So in that case we don't have to worry about fees because the miners are producing empty blocks. Setting to
+// DEFAULT_TRANSACTION_MINFEE (1000) here to guarantee that the transaction will be included eventually.
 //! -fallbackfee default
-static const CAmount DEFAULT_FALLBACK_FEE = 20000;
+static const CAmount DEFAULT_FALLBACK_FEE = 1000;
 //! -m_discard_rate default
-static const CAmount DEFAULT_DISCARD_FEE = 10000;
+static const CAmount DEFAULT_DISCARD_FEE = 1000; // should not be bigger than the fallback fee to avoid confusion
 //! -mintxfee default
 static const CAmount DEFAULT_TRANSACTION_MINFEE = 1000;
 //! minimum recommended increment for BIP 125 replacement txs
