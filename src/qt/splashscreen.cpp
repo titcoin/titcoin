@@ -68,13 +68,11 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     QRect rGradient(QPoint(0,0), splashSize);
     pixPaint.fillRect(rGradient, gradient);
 
-    // draw the titcoin icon, expected size of PNG: 850x580
-    QRect rectIcon(QPoint(-150,-122), QSize(430,430));
-
     const QSize requiredSize(850,850);
     QPixmap icon(networkStyle->getAppIcon().pixmap(requiredSize));
 
-    pixPaint.drawPixmap(rectIcon, icon);
+    icon = icon.scaled(430, 430, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    pixPaint.drawPixmap(-150, -122, icon);
 
     // check font size and drawing with
     pixPaint.setFont(QFont(font, 33*fontFactor));
