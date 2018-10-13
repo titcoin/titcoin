@@ -80,8 +80,8 @@ public:
         consensus.nSubsidyHalvingInterval = 500000; // TIT block reward is halving roughly every 347 days
         consensus.DifficultyForkTime = 1409054400; // In the first 52 hours Titcoin was mined with standard difficulty rules (phase 1)
         consensus.BIP16Height = 1; // Titcoin has been supporting BIP16 (P2SH) since the beginning
-        consensus.BIP34Height = 227931;
-        consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
+        consensus.BIP34Height = 1; // Titcoin has been supporting BIP34 (block v2) since the beginning
+        consensus.BIP34Hash = uint256S("00000000bb82b1cbe86b5fe62967c13ff2e8cdabf68adeea2038289771c3491f"); // Block 1
         consensus.BIP65Height = 388381; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
         consensus.BIP66Height = 363725; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
