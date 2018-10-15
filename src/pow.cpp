@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
+// Copyright (c) 2014-2018 The Titcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,8 +10,10 @@
 #include <chain.h>
 #include <primitives/block.h>
 #include <uint256.h>
+//#include <inttypes.h>
+//#include <util.h>
 
-unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+unsigned int GetNextWorkRequiredV1(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     assert(pindexLast != nullptr);
     unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
@@ -23,7 +26,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
             // Special difficulty rule for testnet:
             // If the new block's timestamp is more than 2* 10 minutes
             // then allow mining of a min-difficulty block.
-            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*2)
+            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacingV1*2)
                 return nProofOfWorkLimit;
             else
             {
@@ -70,6 +73,72 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 
     return bnNew.GetCompact();
 }
+
+unsigned int GetNextWorkRequiredV2(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+{
+    // Transferred from https://github.com/titcoin/titcoin-original/blob/master/src/main.cpp#L1177
+    // Modified Digishield. Digishield retargets every block, reducing the apparent difference between the actual
+    // block interval and target block interval by a factor of 8. It allows a 33% change in difficulty.
+
+    assert(pindexLast != nullptr);
+    unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
+
+    if (pindexLast->nHeight == 0) // Genesis block
+        return nProofOfWorkLimit;
+
+    // Titcoin: Digishield implementation means difficulty changes every block
+
+    // Go back by one block
+    const CBlockIndex* pindexFirst = pindexLast->pprev;
+    assert(pindexFirst);
+
+    return CalculateNextWorkRequiredV2(pindexLast, pindexFirst->GetBlockTime(), params);
+}
+
+unsigned int CalculateNextWorkRequiredV2(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
+{
+    if (params.fPowNoRetargeting) // regtest
+        return pindexLast->nBits;
+
+    // Limit adjustment step
+    int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
+    //LogPrintf("  nActualTimespan = %" PRId64 " before bounds\n", nActualTimespan);
+
+    nActualTimespan = params.nPowTargetSpacing + (nActualTimespan - params.nPowTargetSpacing) / 8;
+
+    int64_t lowerLim = params.nPowTargetSpacing - params.nPowTargetSpacing / 4;  // 45
+    int64_t higherLim = params.nPowTargetSpacing + params.nPowTargetSpacing / 2; // 90
+
+    if (nActualTimespan < lowerLim) // can only happen with a negative time difference, since 60 + (0 - 60)/8 = 52.5 > 45
+	    nActualTimespan = lowerLim;
+    else if (nActualTimespan > higherLim) // there hasn't been a block for 5 minutes
+	    nActualTimespan = higherLim;
+
+    // Retarget: Scale up or down the difficulty every block proprotionally to the target delta with a smoothing factor of 1/8.
+    const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+    arith_uint256 bnNew;
+    bnNew.SetCompact(pindexLast->nBits);
+    bnNew *= nActualTimespan;
+    bnNew /= params.nPowTargetSpacing;
+
+    if (bnNew > bnPowLimit)
+        bnNew = bnPowLimit;
+
+    /// debug print
+    //LogPrintf("GetNextWorkRequiredV2 RETARGET\n");
+    //LogPrintf("nTargetTimespan = %" PRId64 "   nActualTimespan (adjusted) = %" PRId64 "\n", params.nPowTargetSpacing, nActualTimespan);
+    //LogPrintf("Before: %08x  %s\n", pindexLast->nBits, ArithToUint256(arith_uint256().SetCompact(pindexLast->nBits)).ToString());
+    //LogPrintf("After:  %08x  %s\n", bnNew.GetCompact(), ArithToUint256(bnNew).ToString());
+    return bnNew.GetCompact();
+}
+
+
+unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+{
+    assert(pindexLast != nullptr);
+    return ((pindexLast->nTime < params.DifficultyForkTime) ? GetNextWorkRequiredV1 : GetNextWorkRequiredV2) (pindexLast, pblock, params);
+}
+
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
 {
