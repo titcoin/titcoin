@@ -98,6 +98,6 @@ std::string ChainNameFromCommandLine()
     if (fRegTest)
         return CBaseChainParams::REGTEST;
     if (fTestNet)
-        return CBaseChainParams::TESTNET;
+        throw std::runtime_error("Testnet is currently disabled.");
     return CBaseChainParams::MAIN;
 }
