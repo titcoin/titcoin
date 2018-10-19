@@ -6,7 +6,7 @@ About
 
 This is the current Titcoin wallet made by Gandalf86. For more info about Titcoin, see https://bitcointalk.org/index.php?topic=5018869.0
 
-Titcoin is based on [Bitcoin Core](https://github.com/bitcoin/bitcoin), all credits go to the Bitcoin Core developers. Most documentation files have been left untouched to avoid confusion.
+Titcoin is based on [Bitcoin Core](https://github.com/bitcoin/bitcoin) version 0.16.3, all credits go to the Bitcoin Core developers. Most documentation files have been left untouched to avoid confusion.
 
 License
 -------
