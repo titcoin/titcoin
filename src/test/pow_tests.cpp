@@ -83,4 +83,43 @@ BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)
     }
 }
 
+// ---------- Retarget V2 tests -------------
+
+/* Test calculation of next difficulty target using the new difficulty algorithm */
+BOOST_AUTO_TEST_CASE(get_next_work_v2)
+{
+    const auto chainParams = CreateChainParams(CBaseChainParams::MAIN);
+    // DifficultyForkTime     = 1409054400
+    int64_t nLastRetargetTime = 1409054341; // Block #29809
+    CBlockIndex pindexLast;
+    pindexLast.nHeight = 29810;
+    pindexLast.nTime = 1409054605;  // Block #29810
+    pindexLast.nBits = 0x1a16d2a9;
+    BOOST_CHECK_EQUAL(CalculateNextWorkRequiredV2(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), 0x1a20551a);
+}
+
+/* Test the constraint on the lower bound for actual time taken */
+BOOST_AUTO_TEST_CASE(get_next_work_v2_lower_limit_actual)
+{
+    const auto chainParams = CreateChainParams(CBaseChainParams::MAIN);
+    int64_t nLastRetargetTime = 1409527167; // Block #37221
+    CBlockIndex pindexLast;
+    pindexLast.nHeight = 37222;
+    pindexLast.nTime = 1409527107;  // Block #37222, negative time difference of -60 seconds
+    pindexLast.nBits = 0x1a6b73bb;
+    BOOST_CHECK_EQUAL(CalculateNextWorkRequiredV2(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), 0x1a5096cc);
+}
+
+/* Test the constraint on the upper bound for actual time taken */
+BOOST_AUTO_TEST_CASE(get_next_work_v2_upper_limit_actual)
+{
+    const auto chainParams = CreateChainParams(CBaseChainParams::MAIN);
+    int64_t nLastRetargetTime = 1409055142; // Block #29813
+    CBlockIndex pindexLast;
+    pindexLast.nHeight = 29814;
+    pindexLast.nTime = 1409055841;  // Block #29814
+    pindexLast.nBits = 0x1a3e152e;
+    BOOST_CHECK_EQUAL(CalculateNextWorkRequiredV2(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), 0x1a5d1fc5);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

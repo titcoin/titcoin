@@ -10,6 +10,8 @@
 #include <chain.h>
 #include <primitives/block.h>
 #include <uint256.h>
+//#include <inttypes.h>
+//#include <util.h>
 
 unsigned int GetNextWorkRequiredV1(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
@@ -83,18 +85,23 @@ unsigned int GetNextWorkRequiredV2(const CBlockIndex* pindexLast, const CBlockHe
 
     if (pindexLast->nHeight == 0) // Genesis block
         return nProofOfWorkLimit;
-    if (params.fPowNoRetargeting) // regtest
-        return pindexLast->nBits;
 
     // Titcoin: Digishield implementation means difficulty changes every block
 
     // Go back by one block
-    const CBlockIndex* pindexFirst = pindexLast;
-    pindexFirst = pindexFirst->pprev;
+    const CBlockIndex* pindexFirst = pindexLast->pprev;
     assert(pindexFirst);
 
+    return CalculateNextWorkRequiredV2(pindexLast, pindexFirst->GetBlockTime(), params);
+}
+
+unsigned int CalculateNextWorkRequiredV2(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
+{
+    if (params.fPowNoRetargeting) // regtest
+        return pindexLast->nBits;
+
     // Limit adjustment step
-    int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
+    int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
     //LogPrintf("  nActualTimespan = %" PRId64 " before bounds\n", nActualTimespan);
 
     nActualTimespan = params.nPowTargetSpacing + (nActualTimespan - params.nPowTargetSpacing) / 8;
@@ -124,6 +131,7 @@ unsigned int GetNextWorkRequiredV2(const CBlockIndex* pindexLast, const CBlockHe
     //LogPrintf("After:  %08x  %s\n", bnNew.GetCompact(), ArithToUint256(bnNew).ToString());
     return bnNew.GetCompact();
 }
+
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
