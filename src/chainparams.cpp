@@ -249,12 +249,13 @@ public:
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
 
-
+        /*
         checkpointData = {
             {
                 {546, uint256S("000000002a936ca763904c3c35fce2f3556c559c0214345d31b1bcebf76acb70")},
             }
         };
+        */
 
         chainTxData = ChainTxData{
             // Data as of block 000000000000033cfa3c975eb83ecf2bb4aaedf68e6d279f6ed2b427c64caff9 (height 1260526)
