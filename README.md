@@ -1,5 +1,6 @@
 Titcoin Wallet
 =====================================
+[![Build Status](https://travis-ci.com/titcoin/titcoin.svg?branch=master)](https://travis-ci.com/titcoin/titcoin)
 
 About
 -----
@@ -29,5 +30,7 @@ Please refer to the build notes in the [doc/](doc/) directory for compiling the 
 Testing
 -------
 
-Unit tests can be run with `make check`. All unit tests should pass. Please report if there are any errors and only use the wallet if all included tests pass. For more info, see [/src/test/README.md](/src/test/README.md).
+* Unit tests can be run with `make check`
+* Regression tests can be run with `./test/functional/test_runner.py`
 
+All unit tests should pass. Please report if there are any errors and only use the wallet if all included tests pass. For more info, see [/src/test/README.md](/src/test/README.md).
