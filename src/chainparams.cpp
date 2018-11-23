@@ -313,8 +313,8 @@ public:
 
         genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 69 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("0x0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"));
-        //assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x1ee5aff065c73010c97c661c59f5b4cd9da5fc748ef1608878f414bb7c4d1a93"));
+        assert(genesis.hashMerkleRoot == uint256S("0x1f9a164dac7677bcb240ff49665acd611e7bd58ff1de4aefe8581ab60f1042fe"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -325,7 +325,7 @@ public:
 
         checkpointData = {
             {
-                {0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")},
+                {0, uint256S("1ee5aff065c73010c97c661c59f5b4cd9da5fc748ef1608878f414bb7c4d1a93")},
             }
         };
 
