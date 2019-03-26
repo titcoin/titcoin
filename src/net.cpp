@@ -1758,8 +1758,8 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
         if (interruptNet)
             return;
 
-        // Add seed nodes if DNS seeds are all down (an infrastructure attack?).
-        if (addrman.size() == 0 && (GetTime() - nStart > 60)) {
+        // Add seed nodes if DNS seeds are all down (an infrastructure attack?) or if we don't have any DNS seeds
+        if ((addrman.size() == 0 && (GetTime() - nStart > 60)) || Params().DNSSeeds().empty()) {
             static bool done = false;
             if (!done) {
                 LogPrintf("Adding fixed seed nodes as DNS doesn't seem to be available.\n");
