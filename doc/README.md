@@ -1,82 +1,60 @@
-Bitcoin Core
-=============
+Build instructions
+====================
 
-Setup
----------------------
-Bitcoin Core is the original Bitcoin client and it builds the backbone of the network. It downloads and, by default, stores the entire history of Bitcoin transactions (which is currently more than 100 GBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
+These instructions are used to compile all Titcoin releases. The instructions are meant to be used on Debian 9 (Stretch). If you are using a different operating system, the necessary steps might be different. The recommended way to compile Titcoin is to set up Debian 9 (e.g. in a VM), make sure it has enough RAM and disk space and then follow these instructions.
 
-To download Bitcoin Core, visit [bitcoincore.org](https://bitcoincore.org/en/releases/).
+```
+# Install necessary tools
+sudo apt-get install git build-essential libtool autotools-dev automake pkg-config bsdmainutils python3 curl wget
 
-Running
----------------------
-The following are some helpful notes on how to run Bitcoin on your native platform.
+# Download + prepare Titcoin source code
+git clone https://github.com/titcoin/titcoin
+cd titcoin
+./autogen.sh
 
-### Unix
+# Build for Linux x64
+cd depends
+make HOST=x86_64-pc-linux-gnu
+cd ..
+CONFIG_SITE=$PWD/depends/x86_64-pc-linux-gnu/share/config.site ./configure --prefix=/
+make clean
+make
+# For full distribution package (including man pages etc.), use:
+#   mkdir linux-release
+#   make install DESTDIR=$PWD/linux-release
+# We are just packaging the binaries here:
+mkdir linux-release
+mv src/qt/titcoin-qt linux-release
+mv src/titcoind linux-release
+mv src/titcoin-cli linux-release
+cd linux-release
+tar -czvf ../titcoin-release.tar.gz *
+cd ..
+rm -r linux-release
 
-Unpack the files into a directory and run:
+# Build for Windows x64
+sudo apt-get install g++-mingw-w64-x86-64 nsis
+sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+cd depends
+make HOST=x86_64-w64-mingw32
+cd ..
+CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --prefix=/
+make clean
+make
+make deploy
+# if it says "error: could not build titcoin-0.16.3-win64-setup.exe", use:
+makensis share/setup.nsi
 
-- `bin/bitcoin-qt` (GUI) or
-- `bin/bitcoind` (headless)
-
-### Windows
-
-Unpack the files into a directory, and then run bitcoin-qt.exe.
-
-### OS X
-
-Drag Bitcoin-Core to your applications folder, and then run Bitcoin-Core.
-
-### Need Help?
-
-* See the documentation at the [Bitcoin Wiki](https://en.bitcoin.it/wiki/Main_Page)
-for help and more information.
-* Ask for help on [#bitcoin](http://webchat.freenode.net?channels=bitcoin) on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net?channels=bitcoin).
-* Ask for help on the [BitcoinTalk](https://bitcointalk.org/) forums, in the [Technical Support board](https://bitcointalk.org/index.php?board=4.0).
-
-Building
----------------------
-The following are developer notes on how to build Bitcoin on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
-
-- [Dependencies](dependencies.md)
-- [OS X Build Notes](build-osx.md)
-- [Unix Build Notes](build-unix.md)
-- [Windows Build Notes](build-windows.md)
-- [OpenBSD Build Notes](build-openbsd.md)
-- [Gitian Building Guide](gitian-building.md)
-
-Development
----------------------
-The Bitcoin repo's [root README](/README.md) contains relevant information on the development process and automated testing.
-
-- [Developer Notes](developer-notes.md)
-- [Release Notes](release-notes.md)
-- [Release Process](release-process.md)
-- [Source Code Documentation (External Link)](https://dev.visucore.com/bitcoin/doxygen/)
-- [Translation Process](translation_process.md)
-- [Translation Strings Policy](translation_strings_policy.md)
-- [Travis CI](travis-ci.md)
-- [Unauthenticated REST Interface](REST-interface.md)
-- [Shared Libraries](shared-libraries.md)
-- [BIPS](bips.md)
-- [Dnsseed Policy](dnsseed-policy.md)
-- [Benchmarking](benchmarking.md)
-
-### Resources
-* Discuss on the [BitcoinTalk](https://bitcointalk.org/) forums, in the [Development & Technical Discussion board](https://bitcointalk.org/index.php?board=6.0).
-* Discuss project-specific development on #bitcoin-core-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=bitcoin-core-dev).
-* Discuss general Bitcoin development on #bitcoin-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=bitcoin-dev).
-
-### Miscellaneous
-- [Assets Attribution](assets-attribution.md)
-- [Files](files.md)
-- [Fuzz-testing](fuzzing.md)
-- [Reduce Traffic](reduce-traffic.md)
-- [Tor Support](tor.md)
-- [Init Scripts (systemd/upstart/openrc)](init.md)
-- [ZMQ](zmq.md)
-
-License
----------------------
-Distributed under the [MIT software license](/COPYING).
-This product includes software developed by the OpenSSL Project for use in the [OpenSSL Toolkit](https://www.openssl.org/). This product includes
-cryptographic software written by Eric Young ([eay@cryptsoft.com](mailto:eay@cryptsoft.com)), and UPnP software written by Thomas Bernard.
+# Build for Mac OS X 11
+sudo apt-get install librsvg2-bin libtiff-tools cmake imagemagick libcap-dev libz-dev libbz2-dev python-setuptools libtinfo5
+cd depends
+mkdir -p SDKs sdk-sources
+wget -N -P sdk-sources https://bitcoincore.org/depends-sources/sdks/MacOSX10.11.sdk.tar.gz
+tar -C SDKs -xf sdk-sources/MacOSX10.11.sdk.tar.gz
+make HOST=x86_64-apple-darwin11
+cd ..
+CONFIG_SITE=$PWD/depends/x86_64-apple-darwin11/share/config.site ./configure --prefix=/
+make clean
+make
+make deploy
+```
